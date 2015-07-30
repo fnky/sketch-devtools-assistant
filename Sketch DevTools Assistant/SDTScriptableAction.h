@@ -10,7 +10,6 @@
 
 @interface SDTScriptableAction : NSObject <NSCoding>
 
-
 @property BOOL enabled;
 @property NSString* actionID;
 @property NSString* name;
@@ -19,7 +18,6 @@
 @property NSString* origin;
 @property NSString* target;
 @property NSString* trigger;
-
 
 -(void)execute;
 -(instancetype)initWithCommandData:(NSDictionary*)data;

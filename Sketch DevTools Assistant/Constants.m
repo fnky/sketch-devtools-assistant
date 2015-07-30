@@ -8,9 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
-
-NSString* const kSketchReleaseBundleID=@"com.bohemiancoding.sketch3";
-NSString* const kSketchBetaBundleID=@"com.bohemiancoding.sketch3.beta";
+NSString* const kSketchReleaseBundleID = @"com.bohemiancoding.sketch3";
+NSString* const kSketchBetaBundleID = @"com.bohemiancoding.sketch3.beta";
 
 NSString *const kPluginFolderPathSandboxed = @"~/Library/Containers/com.bohemiancoding.sketch3/Data/Library/Application Support/com.bohemiancoding.sketch3/Plugins/";
 NSString *const kPluginFolderPathBetaSandboxed = @"~/Library/Containers/com.bohemiancoding.sketch3.beta/Data/Library/Application Support/com.bohemiancoding.sketch3/Plugins/";

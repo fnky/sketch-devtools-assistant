@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Turbobabr. All rights reserved.
 //
 
-
 extern NSString* const kSketchReleaseBundleID;
 extern NSString* const kSketchBetaBundleID;
 

@@ -12,58 +12,65 @@
 @implementation SDTProtocolHandler
 
 +(BOOL)openFile:(NSString*)filePath withIDE:(NSString*)ide atLine:(NSInteger)line {
-    ide=[ide lowercaseString];
+  ide = [ide lowercaseString];
+
+  NSString* sublime2LaunchPath=@"/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl";
+  NSString* sublime3LaunchPath=@"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl";
+
+  NSDictionary* factory = @{
+    @"sublime": @{
+      @"launchPath": ([[NSFileManager defaultManager] fileExistsAtPath:sublime2LaunchPath]) ? sublime2LaunchPath : sublime3LaunchPath,
+      @"arguments": @[[NSString stringWithFormat:@"%@:%ld", filePath, line]]
+    },
+
+    @"textmate": @{
+      @"launchPath": @"/Applications/TextMate.app/Contents/Resources/mate",
+      @"arguments": @[filePath, @"-l", [NSString stringWithFormat:@"%ld", line]]
+    },
+
+    @"atom": @{
+      @"launchPath": @"/Applications/Atom.app/Contents/MacOS/Atom",
+      @"arguments": @[[NSString stringWithFormat:@"%@:%ld", filePath, line]]
+    },
+
+    @"xcode": @{
+      @"launchPath": @"/usr/bin/xed",
+      @"arguments": @[@"--line", [NSString stringWithFormat:@"%ld", line], filePath]
+    },
+
+    @"webstorm": @{
+      @"launchPath": @"/Applications/WebStorm.app/Contents/MacOS/webide",
+      @"arguments": @[@"--line", [NSString stringWithFormat:@"%ld", line], filePath],
+      @"postProcessingScript": @"tell application \"WebStorm\" to activate"
+    },
+
+    @"appcode": @{
+      @"launchPath": @"/Applications/AppCode.app/Contents/MacOS/appcode",
+      @"arguments": @[@"--line", [NSString stringWithFormat:@"%ld", line], filePath],
+      @"postProcessingScript": @"tell application \"AppCode\" to activate"
+    },
     
-    NSString* sublime2LaunchPath=@"/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl";
-    NSString* sublime3LaunchPath=@"/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl";
+    @"macvim": @{
+      @"launchPath": @"/Applications/MacVim.app/Contents/MacOS/Vim",
+      @"arguments": @[filePath, @"-g", [NSString stringWithFormat:@"+%ld", line]]
+    },
+  };
+  
+  if ([factory objectForKey:ide]) {
+    NSDictionary* launchOptions = factory[ide];
     
-    NSDictionary* factory=
-    @{
-      @"sublime": @{
-              @"launchPath": ([[NSFileManager defaultManager] fileExistsAtPath:sublime2LaunchPath]) ? sublime2LaunchPath : sublime3LaunchPath,
-              @"arguments": @[[NSString stringWithFormat:@"%@:%ld",filePath,line]]
-              },
-      @"textmate": @{
-              @"launchPath": @"/Applications/TextMate.app/Contents/Resources/mate",
-              @"arguments": @[filePath,@"-l",[NSString stringWithFormat:@"%ld",line]]
-              },
-      @"atom": @{
-              @"launchPath": @"/Applications/Atom.app/Contents/MacOS/Atom",
-              @"arguments": @[[NSString stringWithFormat:@"%@:%ld",filePath,line]]
-              },
-      @"xcode": @{
-              @"launchPath": @"/usr/bin/xed",
-              @"arguments": @[@"--line",[NSString stringWithFormat:@"%ld",line],filePath]
-              },
-      @"webstorm": @{
-              @"launchPath": @"/Applications/WebStorm.app/Contents/MacOS/webide",
-              @"arguments": @[@"--line",[NSString stringWithFormat:@"%ld",line],filePath],
-              @"postProcessingScript": @"tell application \"WebStorm\" to activate"
-              },
-      @"appcode": @{
-              @"launchPath": @"/Applications/AppCode.app/Contents/MacOS/appcode",
-              @"arguments": @[@"--line",[NSString stringWithFormat:@"%ld",line],filePath],
-              @"postProcessingScript": @"tell application \"AppCode\" to activate"
-              },
-      @"macvim": @{
-              @"launchPath": @"/Applications/MacVim.app/Contents/MacOS/Vim",
-              @"arguments": @[filePath,@"-g",[NSString stringWithFormat:@"+%ld",line]]
-              },
-      };
+    [NSTask launchedTaskWithLaunchPath:launchOptions[@"launchPath"]
+                             arguments:launchOptions[@"arguments"]];
     
-    if([factory objectForKey:ide]) {
-        NSDictionary* launchOptions=factory[ide];
-        
-        [NSTask launchedTaskWithLaunchPath:launchOptions[@"launchPath"] arguments:launchOptions[@"arguments"]];
-        if([launchOptions objectForKey:@"postProcessingScript"]) {
-            NSAppleScript* script = [[NSAppleScript alloc] initWithSource:launchOptions[@"postProcessingScript"]];
-            [script executeAndReturnError:nil];
-        }
-        
-        return true;
+    if ([launchOptions objectForKey:@"postProcessingScript"]) {
+      NSAppleScript* script = [[NSAppleScript alloc] initWithSource:launchOptions[@"postProcessingScript"]];
+      [script executeAndReturnError:nil];
     }
     
-    return false;
+    return true;
+  }
+  
+  return false;
 }
 
 @end
