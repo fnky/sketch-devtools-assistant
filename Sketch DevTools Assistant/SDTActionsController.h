@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-
 @class SDTScriptableAction;
 
 @interface SDTActionsController : NSObject

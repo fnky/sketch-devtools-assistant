@@ -7,14 +7,13 @@
 
 #import <Foundation/Foundation.h>
 
-
 typedef enum {
-    OBCodeSignStateUnsigned = 1,
-    OBCodeSignStateSignatureValid,
-    OBCodeSignStateSignatureInvalid,
-    OBCodeSignStateSignatureNotVerifiable,
-    OBCodeSignStateSignatureUnsupported,
-    OBCodeSignStateError
+  OBCodeSignStateUnsigned = 1,
+  OBCodeSignStateSignatureValid,
+  OBCodeSignStateSignatureInvalid,
+  OBCodeSignStateSignatureNotVerifiable,
+  OBCodeSignStateSignatureUnsupported,
+  OBCodeSignStateError
 } OBCodeSignState;
 
 

@@ -7,7 +7,6 @@
 //
 
 #import <Foundation/Foundation.h>
-
 #import "SDTAppleScriptCommandRunScriptBase.h"
 
 @interface SDTAppleScriptCommandRunScriptAtPath : SDTAppleScriptCommandRunScriptBase
